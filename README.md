@@ -12,6 +12,40 @@ The module auto-registers as a [vLLM general plugin](https://docs.vllm.ai/en/lat
 uv add vllm-lens
 ```
 
+### Local development (Conda + Jupyter)
+
+If you prefer Conda over `uv`, use a dedicated environment (Python **3.12+**, matching `requires-python` in `pyproject.toml`):
+
+```bash
+conda create -n vllm-lens python=3.12 -y
+conda activate vllm-lens
+pip install -e .
+```
+
+On **Windows with a GPU**, the default `pip install -e .` stack may pull a **CPU-only** PyTorch wheel. Install CUDA builds from the [PyTorch wheel index](https://download.pytorch.org/whl/) (example for CUDA 12.6):
+
+```bash
+pip install --upgrade torch torchvision --index-url https://download.pytorch.org/whl/cu126
+```
+
+**Jupyter:** the same `vllm-lens` environment is appropriate for notebooks in this repo (same `vllm`, `vllm_lens`, and PyTorch as your scripts). Register a kernel after `ipykernel` is installed in that env:
+
+```bash
+python -m pip install jupyterlab ipykernel
+python -m ipykernel install --user --name vllm-lens --display-name "Python (conda vllm-lens)"
+```
+
+In VS Code or Cursor, pick that kernel for `.ipynb` files, or select the `vllm-lens` conda interpreter for the workspace.
+
+**Windows user-site packages:** if you also install packages into `%APPDATA%\Python\Python312`, Jupyter can sometimes pick those up instead of the Conda env. If imports look wrong, run with user site disabled, for example:
+
+```bash
+set PYTHONNOUSERSITE=1
+jupyter lab
+```
+
+(PowerShell: `$env:PYTHONNOUSERSITE = "1"`.)
+
 ## Examples
 
 These examples use the Inspect integration. See the [`examples/`](examples/) folder for offline and online direct vLLM usage.
